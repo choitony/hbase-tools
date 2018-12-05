@@ -6,7 +6,6 @@ user=`whoami`
 root_dir=`dirname $0`
 log_dir="$root_dir/log"
 current_time=`date +"%Y-%m-%d-%H-%M-%S"`
-current_time="2018-12-05-16-39-04"
 log_file="$log_dir/$current_time"
 alarm_people="chaiwentao"
 alarm_way="wechat"
