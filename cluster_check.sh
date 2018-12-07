@@ -16,9 +16,7 @@ inconsistencies=-1
 
 
 do_alarm() {
-	sumary="host host"
-	content="content content"
-  curl -H "Content-Type:application/json" -X POST -d '{ "receivers": ["'$alarm_people'"],"enables": ["'$alarm_way'"],"summary": "'$sumary'","content": "'$content'"}' "http://message.vdian.net/api/message?token=e575fa6250fd5f98c1a47438ba347395"
+  curl -H "Content-Type:application/json" -X POST -d '{ "receivers": ["'$alarm_people'"],"enables": ["'$alarm_way'"],"summary": "'"$1"'","content": "'"$2"'"}' "http://message.vdian.net/api/message?token=e575fa6250fd5f98c1a47438ba347395"
 }
 
 if [ $authentic_user != $user ]
@@ -29,22 +27,18 @@ fi
 
 HBASE=`which hbase`
 
-#$HBASE hbck > $log_file
+$HBASE hbck > $log_file
 
 while read line
 do
     if [[ $deadServer == -1 && $line == "Number of dead region servers:"* ]]
     then
-		 echo $line
          deadServer=${line##* }
-		 echo $deadServer
     fi
 
     if [[ $inconsistencies == -1 && $line == *" inconsistencies detected." ]]
     then
-		 echo $line
          inconsistencies=${line%% *}
-		 echo $inconsistencies
     fi
 done < $log_file
 
@@ -62,7 +56,9 @@ then
     retcode=1
 fi
 
-echo ""
-echo "hbck completed. cluster status ok"
+delete_log=`date -d "-30 days" +"%Y-%m-%d"`
+rm -f $log_dir/$delete_log"*"
+
+echo "[hbck completed. cluster status ok]"
 
 exit 0
